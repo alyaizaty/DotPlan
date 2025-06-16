@@ -2,14 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package java.Dao;
+package Dao;
 
-import java.Model.Task;
-import java.Model.User;
+import Model.Task;
+import Model.User;
 
 import java.sql.*;
 import java.util.*;
-import java.Dao.DBUtil;
+import Dao.DBUtil;
 
 public class TaskDAO {
 
