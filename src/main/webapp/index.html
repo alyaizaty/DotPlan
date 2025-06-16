@@ -1,0 +1,73 @@
+
+<!-- Landing page -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DotPlan - Get Started</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="container">
+            <!-- Left Box -->
+            <div class="left-box">
+                <div class="logo-container">
+                    <img src="images/DotPlan.jpg" alt="DotPlan Icon" class="logo">
+                    <div class="logo-text">DotPlan</div>
+                </div>
+
+                <div class="about">
+                    <h2>About</h2>
+                    <p>A simple tool to help you organize and plan your daily tasks easily.
+                        It focuses on what matters most 
+                        - getting things done efficiently.</p>
+                </div>
+                <div class="benefits">
+                    <h3>Benefits</h3>
+                    <ul class="benefits-list">
+                        <li>Clear your mind</li>
+                        <li>Manage time better</li>
+                        <li>Stay on track</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Right Content -->
+            <div class="right-side">
+                <div class="top-right">
+                    <a href="login.jsp" class="login-btn">Login</a>
+                </div>
+
+                <div class="main-content">
+                    <div class="blinking-stars">
+                        <img src="images/stars.png" alt="Blinking stars">
+                    </div>
+                    <h1>Organize your days</h1>
+                    <p>Plan and manage your schedule with ease</p>
+                    <button id="openSignup" class="get-started-btn">Get Started</button>
+                </div>
+
+                <div class="motto">
+                    <span class="motto-word">Plan.</span>
+                    <span class="motto-word">Focus.</span>
+                    <span class="motto-word">Achieve.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            &copy; 2025 DotPlan. All rights reserved.
+        </div>
+    </div>
+
+    <!-- Fixed this part below 👇 -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <iframe src="signup.jsp"></iframe>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

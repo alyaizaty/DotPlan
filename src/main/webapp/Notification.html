@@ -1,0 +1,188 @@
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standalone Notification Module</title>
+    <style>
+        /* Notification container styling */
+        #notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 300px;
+        }
+        
+        /* Individual notification styling */
+        .notification {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            color: white;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            animation: slideIn 0.3s ease-out, fadeOut 0.5s ease 4.5s forwards;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* Notification types */
+        .notification.info {
+            background-color: #2196F3;
+        }
+        
+        .notification.success {
+            background-color: #4CAF50;
+        }
+        
+        .notification.warning {
+            background-color: #FF9800;
+        }
+        
+        .notification.error {
+            background-color: #F44336;
+        }
+        
+        /* Close button */
+        .notification-close {
+            background: none;
+            border: none;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        /* Animations */
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
+        /* Demo page styling */
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .demo-controls {
+            margin: 30px 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        button {
+            padding: 10px 15px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Notification Module Demo</h1>
+    
+    <div id="notification-container"></div>
+    
+    <div class="demo-controls">
+        <button onclick="showNotification('info', 'Information', 'This is an info notification')">Show Info</button>
+        <button onclick="showNotification('success', 'Success!', 'Operation completed successfully')">Show Success</button>
+        <button onclick="showNotification('warning', 'Warning', 'This action requires attention')">Show Warning</button>
+        <button onclick="showNotification('error', 'Error', 'Something went wrong')">Show Error</button>
+        <button onclick="showBrowserNotification('Browser Notification', 'This appears as a system notification')">Show Browser Notification</button>
+        <button onclick="NotificationManager.requestPermission()">Request Permission</button>
+    </div>
+
+    <script>
+        // Notification Module - Core Functionality
+        const NotificationManager = {
+            // Initialize the module
+            init: function() {
+                if (!("Notification" in window)) {
+                    console.warn("This browser doesn't support notifications");
+                    return false;
+                }
+                return true;
+            },
+            
+            // Request notification permission
+            requestPermission: function() {
+                if (this.init()) {
+                    Notification.requestPermission().then(permission => {
+                        const message = `Notification permission: ${permission}`;
+                        this.showToast('info', 'Permission', message);
+                    });
+                }
+            },
+            
+            // Show in-app toast notification
+            showToast: function(type, title, message, duration = 5000) {
+                const container = document.getElementById("notification-container");
+                const notification = document.createElement("div");
+                notification.className = `notification ${type}`;
+                
+                notification.innerHTML = `
+                    <div>
+                        <strong>${title}</strong>
+                        <p>${message}</p>
+                    </div>
+                    <button class="notification-close" onclick="this.parentElement.remove()">×</button>
+                `;
+                
+                container.appendChild(notification);
+                
+                // Auto-remove after duration
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, duration);
+            },
+            
+            // Show browser/system notification
+            showBrowserNotification: function(title, message) {
+                if (!this.init()) return;
+                
+                if (Notification.permission === "granted") {
+                    new Notification(title, { body: message });
+                } else if (Notification.permission !== "denied") {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === "granted") {
+                            new Notification(title, { body: message });
+                        }
+                    });
+                }
+            }
+        };
+        
+        // Initialize on page load
+        document.addEventListener("DOMContentLoaded", function() {
+            NotificationManager.init();
+        });
+        
+        // Helper functions for demo
+        function showNotification(type, title, message) {
+            NotificationManager.showToast(type, title, message);
+        }
+        
+        function showBrowserNotification(title, message) {
+            NotificationManager.showBrowserNotification(title, message);
+        }
+    </script>
+</body>
+</html>
