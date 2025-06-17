@@ -45,4 +45,5 @@
             </plugin>
         </plugins>
     </build>
+    <name>DotPlan</name>
 </project>
