@@ -21,9 +21,9 @@ public class DBUtil {
     //private static final String PASSWORD = "admin"; // MySQL password
 
     // Register dalam environment based on catalina.start
-    private static final String URL = System.getenv("URL"); 
-    private static final String USER = System.getenv("USER");
-    private static final String PASSWORD = System.getenv("admin");
+    private static final String DB_URL = System.getenv("URL"); 
+    private static final String DB_USER = System.getenv("USER");
+    private static final String DB_PASS = System.getenv("admin");
 
     
     
@@ -36,6 +36,6 @@ public class DBUtil {
         }
 
         // Return the connection
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
     }
 }
