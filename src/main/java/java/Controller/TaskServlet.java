@@ -2,11 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package java.Controller;
+package Controller;
 
-import java.Dao.TaskDAO;
-import java.Model.Task;
-import java.Model.User;
+import Dao.TaskDAO;
+import Model.Task;
+import Model.User;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
