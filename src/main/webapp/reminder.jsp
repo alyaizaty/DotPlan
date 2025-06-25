@@ -1,12 +1,13 @@
-<%@page import="Model.Task"%>
+
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="java.util.List" %>
-<%@include file="sessionCheck.jspf"%>
+<%@ page import="java.util.*, java.text.SimpleDateFormat, java.util.Date, Model.Task" %>
+<%@ include file="sessionCheck.jspf" %>
 
 <html>
     <head>
-        <title>View Tasks</title>
+        <title>Reminders</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
         <style>
             body {
                 font-family: 'Segoe UI', sans-serif;
@@ -25,7 +26,7 @@
                 left: 0;
                 top: 0;
                 padding: 20px;
-                padding-bottom: 60px; /* Add extra space at the bottom */
+                padding-bottom: 60px;
                 box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
                 display: flex;
                 flex-direction: column;
@@ -77,6 +78,10 @@
                 transition: background-color 0.3s ease;
             }
 
+            .menu-reminder i {
+                color: #facc15; /* gold/yellow */
+            }
+            
             .sidebar-item:hover {
                 background-color: #f5f5f5;
             }
@@ -97,7 +102,7 @@
 
             .logout-form {
                 margin-top: auto;
-                margin-bottom: 20px; /* Give space above the very bottom */
+                margin-bottom: 20px;
                 display: flex;
                 padding: 10px;
             }
@@ -176,10 +181,6 @@
             .menu-starred i {
                 color: #facc15;
             }
-            .menu-reminder i {
-                color: #facc15; /* gold/yellow */
-            }
-
 
             .main-content {
                 margin-left: 270px;
@@ -218,7 +219,7 @@
 
             th, td {
                 padding: 12px;
-                text-align: left;
+                text-align: center;
                 border-bottom: 1px solid #e5e7eb;
             }
 
@@ -231,39 +232,18 @@
                 background-color: #f9fafb;
             }
 
-            .action-btn {
-                background: none;
-                border: none;
-                cursor: pointer;
-                font-size: 16px;
-                margin-right: 10px;
+            .overdue {
+                background-color: #f8d7da;
             }
 
-            .action-btn i {
-                color: #c9a27e;
+            .due-soon {
+                background-color: #fff3cd;
             }
 
-            .action-btn:hover i {
-                color: #b88c6c;
-            }
-
-            .completed {
+            .done {
+                background-color: #d4edda;
                 text-decoration: line-through;
                 color: #6b7280;
-            }
-
-            .fa-star {
-                color: #facc15; /* Bright yellow */
-            }
-
-            .far.fa-star {
-                color: #ccc; /* Faded gray */
-            }
-
-            .action-btn .fa-star:hover,
-            .action-btn .far.fa-star:hover {
-                transform: scale(1.1);
-                transition: transform 0.2s;
             }
 
             .popup {
@@ -297,10 +277,24 @@
                 }
             }
 
+            .action-btn i {
+                color: #c9a27e;
+            }
 
+
+            .action-btn .fa-star:hover,
+            .action-btn .far.fa-star:hover {
+                transform: scale(1.1);
+                transition: transform 0.2s;
+            }
+
+            button:hover {
+                background-color: #b88c6c;
+            }
         </style>
     </head>
     <body>
+
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <h2>Menu</h2>
@@ -309,32 +303,28 @@
                 </button>
             </div>
 
-            <a href="javascript:void(0);" class="sidebar-item category-all" onclick="openProfileModal()">
+            <a href="javascript:void(0);" class="sidebar-item" onclick="openProfileModal()">
                 <i class="fas fa-user"></i>
                 <span>Profile</span>
             </a>
 
-
             <hr style="border: 1px solid #e5e7eb; margin: 15px 0;">
 
-
-            <a href="${pageContext.request.contextPath}/addTask.jsp" class="sidebar-item menu-add-task" onclick="selectCategory('add-task')">
+            <a href="${pageContext.request.contextPath}/addTask.jsp" class="sidebar-item menu-add-task">
                 <i class="fas fa-plus-circle"></i>
                 <span>Add Task</span>
             </a>
-                
+
             <a href="${pageContext.request.contextPath}/TaskServlet" class="sidebar-item menu-view-tasks">
                 <i class="fas fa-eye"></i>
                 <span>View Tasks</span>
             </a>
-                
 
-            <!-- Reminder nav -->
             <a href="${pageContext.request.contextPath}/ReminderServlet" class="sidebar-item menu-reminder">
                 <i class="fas fa-bell"></i>
                 <span>Reminders</span>
             </a>
-                
+
             <form action="${pageContext.request.contextPath}/LogoutServlet" method="post" class="sidebar-item logout-form">
                 <button type="submit" class="logout-btn">
                     <i class="fas fa-sign-out-alt"></i>
@@ -351,58 +341,51 @@
             </div>
         </div>
 
-
-
         <div class="main-content">
             <div class="container">
-                <h1>📋 Your Tasks</h1>
+                <h1>🔔 Your Reminders</h1>
+                <%                    List<Task> tasks = (List<Task>) request.getAttribute("tasks");
+                    if (tasks == null || tasks.isEmpty()) {
+                %>
+                <p style="text-align:center;">No upcoming or important tasks!</p>
+                <%
+                } else {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date now = new Date();
+                %>
                 <table>
                     <tr>
-                        <th>Name</th>
-                        <th>Start Date</th>
+                        <th>Title</th>
                         <th>Due Date</th>
-                        <th>Priority</th>
-                        <th>Category</th>
-                        <th>Description</th>
-                        <th>Actions</th>
+                        <th>Days Left</th>
+                        <th>Status</th>
+                        <th>Action</th>
                     </tr>
-                    <%                List<Task> tasks = (List<Task>) request.getAttribute("tasks");
-                        if (tasks != null) {
-                            for (Task task : tasks) {
-                                String rowClass = task.isDone() ? "completed" : "";
+                    <%
+                        for (Task task : tasks) {
+                            Date endDate = sdf.parse(task.getEndDate());
+                            long millisDiff = endDate.getTime() - now.getTime();
+                            long daysLeft = millisDiff / (1000 * 60 * 60 * 24);
+
+                            String rowClass = "";
+                            if (task.isDone()) {
+                                rowClass = "done";
+                            } else if (daysLeft < 0) {
+                                rowClass = "overdue";
+                            } else if (daysLeft <= 3) {
+                                rowClass = "due-soon";
+                            }
                     %>
                     <tr class="<%= rowClass%>">
                         <td><%= task.getName()%></td>
-                        <td><%= task.getStartDate()%></td>
                         <td><%= task.getEndDate()%></td>
-                        <td><%= task.getPriority()%></td>
-                        <td><%= task.getCategory()%></td>
-                        <td><%= task.getDescription() != null ? task.getDescription() : ""%></td>
                         <td>
-                            <form action="${pageContext.request.contextPath}/TaskActionServlet" method="get" style="display:inline;">
-                                <input type="hidden" name="action" value="edit">
-                                <input type="hidden" name="id" value="<%= task.getId()%>">
-                                <input type="hidden" name="category" value="<%= task.getCategory()%>">
-                                <button type="submit" class="action-btn"><i class="fas fa-edit"></i></button>
-                            </form>
-
-                            <form action="${pageContext.request.contextPath}/TaskActionServlet" method="get" style="display:inline;">
-                                <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="id" value="<%= task.getId()%>">
-                                <input type="hidden" name="category" value="<%= task.getCategory()%>">
-                                <button type="submit" class="action-btn"><i class="fas fa-trash"></i></button>
-                            </form>
-
-                            <form action="${pageContext.request.contextPath}/TaskActionServlet" method="get" style="display:inline;">
-                                <input type="hidden" name="action" value="toggleStar">
-                                <input type="hidden" name="id" value="<%= task.getId()%>">
-                                <input type="hidden" name="category" value="<%= task.getCategory()%>">
-                                <button type="submit" class="action-btn">
-                                    <i class="<%= task.isStarred() ? "fas fa-star" : "far fa-star"%>"></i>
-                                </button>
-                            </form>
-
-                            <form action="${pageContext.request.contextPath}/TaskActionServlet" method="post" style="display:inline;">
+                            <%= task.isDone() ? "-" : (daysLeft < 0 ? "Overdue" : daysLeft + " day(s)")%>
+                        </td>
+                        <td><%= task.isDone() ? "Done" : "Pending"%></td>
+                        <td>
+                            <% if (!task.isDone()) {%>
+                            <form action="${pageContext.request.contextPath}/ReminderServlet" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="markDone">
                                 <input type="hidden" name="id" value="<%= task.getId()%>">
                                 <input type="hidden" name="category" value="<%= task.getCategory()%>">
@@ -410,25 +393,13 @@
                                     <i class="fas <%= task.isDone() ? "fa-undo" : "fa-check"%>"></i>
                                 </button>
                             </form>
+
+
+                            <% } else { %> - <% } %>
                         </td>
                     </tr>
-                    <%
-                            }
-                        }
-                    %>
+                    <% } %>
                 </table>
-
-                <% String message = (String) request.getAttribute("message"); %>
-                <% if (message != null) {%>
-                <div id="popup" class="popup"><%= message%></div>
-                <script>
-                    const popup = document.getElementById("popup");
-                    popup.style.display = "block";
-                    setTimeout(() => {
-                        popup.style.opacity = "0";
-                        setTimeout(() => popup.remove(), 500);
-                    }, 3000); // 3 seconds
-                </script>
                 <% }%>
             </div>
         </div>
@@ -439,16 +410,6 @@
                 sidebar.classList.toggle('collapsed');
             }
 
-            function selectCategory(category) {
-                document.querySelectorAll('.sidebar-item').forEach(item => {
-                    item.classList.remove('active');
-                });
-                const selected = document.querySelector(`.category-${category}, .menu-${category}`);
-                if (selected) {
-                    selected.classList.add('active');
-                }
-            }
-
             function openProfileModal() {
                 document.getElementById('profileModal').style.display = 'block';
             }
@@ -456,8 +417,9 @@
             function closeProfileModal() {
                 document.getElementById('profileModal').style.display = 'none';
             }
-
-            // Highlight the right menu
-            selectCategory('view-tasks');
         </script>
+
+
+
     </body>
+</html>

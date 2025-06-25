@@ -5,51 +5,40 @@
 
 
 document.addEventListener("DOMContentLoaded", function () {
+    // Modal elements
     const modal = document.getElementById("signupModal");
     const openBtn = document.getElementById("openSignup");
     const closeBtn = document.querySelector(".close-btn");
 
-    openBtn.addEventListener("click", () => {
-        modal.style.display = "flex";
+    // Open modal
+    if (openBtn && modal) {
+        openBtn.addEventListener("click", () => {
+            modal.style.display = "flex";
 
-        // Reload the form every time modal is opened
-        const iframe = modal.querySelector("iframe");
-        if (iframe) {
-            iframe.src = "/DotPlan/signup.jsp";
-        }
-    });
+            const iframe = modal.querySelector("iframe");
+            if (iframe) {
+                iframe.src = "signup.jsp"; // Reload form
+            }
+        });
+    }
 
-    closeBtn.addEventListener("click", () => {
-        modal.style.display = "none";
-    });
+    // Close modal on close button click
+    if (closeBtn && modal) {
+        closeBtn.addEventListener("click", () => {
+            modal.style.display = "none";
+        });
+    }
 
+    // Close modal if clicking outside of modal content
     window.addEventListener("click", (e) => {
         if (e.target === modal) {
             modal.style.display = "none";
         }
     });
-});
 
-// outside the DOMContentLoaded block:
-window.addEventListener("pageshow", function () {
-    const modal = document.getElementById("signupModal");
-    if (modal) {
-        modal.style.display = "none";
-
-        // Clear iframe content to prevent showing blank form on back
-        const iframe = modal.querySelector("iframe");
-        if (iframe) {
-            iframe.src = "";
-        }
-    }
-});
-
-
-
-// User Profile
-document.addEventListener("DOMContentLoaded", function () {
+    // Profile image preview
     const profileInput = document.getElementById("profilePicInput");
-    const profilePreview = document.getElementById("previewImage"); // 
+    const profilePreview = document.getElementById("previewImage");
 
     if (profileInput && profilePreview) {
         profileInput.addEventListener("change", function (event) {
@@ -62,5 +51,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 reader.readAsDataURL(file);
             }
         });
+    }
+});
+
+// Clear iframe content on browser back/refresh to avoid cached form
+window.addEventListener("pageshow", function () {
+    const modal = document.getElementById("signupModal");
+    if (modal) {
+        modal.style.display = "none";
+
+        const iframe = modal.querySelector("iframe");
+        if (iframe) {
+            iframe.src = ""; // Clear content
+        }
     }
 });

@@ -4,12 +4,12 @@
  */
 package java.Dao;
 
-import java.Model.Task;
-import java.Model.User;
+import Model.Task;
+import Model.User;
 
 import java.sql.*;
 import java.util.*;
-import java.Dao.DBUtil;
+import Dao.DBUtil;
 
 public class TaskDAO {
 
@@ -174,4 +174,42 @@ public class TaskDAO {
 
         return t;
     }
+    
+    // FOR reminder.jsp — Fetch important reminder tasks
+    public List<Task> getReminderTasks(int userId) {
+        List<Task> tasks = new ArrayList<>();
+        String sql = "SELECT * FROM tasks "
+                + "WHERE user_id = ? AND done = false "
+                + "AND (starred = true OR end_date <= CURDATE() + INTERVAL 3 DAY) "
+                + "ORDER BY end_date ASC";
+
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Task task = new Task(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getDate("start_date").toString(),
+                        rs.getDate("end_date").toString(),
+                        rs.getString("priority"),
+                        rs.getString("category"),
+                        rs.getString("description"),
+                        rs.getBoolean("done"),
+                        rs.getBoolean("starred"),
+                        rs.getInt("user_id")
+                );
+                tasks.add(task);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tasks;
+    }
+
 }

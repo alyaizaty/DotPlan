@@ -183,6 +183,10 @@
             .menu-view-tasks i {
                 color: #6366f1;
             }
+            
+            .menu-reminder i {
+                color: #facc15;
+            }
 
 
             .main-content {
@@ -268,11 +272,22 @@
 
             <hr style="border: 1px solid #e5e7eb; margin: 15px 0;">
 
+            <a href="${pageContext.request.contextPath}/addTask.jsp" class="sidebar-item menu-add-task" onclick="selectCategory('add-task')">
+                <i class="fas fa-plus-circle"></i>
+                <span>Add Task</span>
+            </a>
 
             <a href="${pageContext.request.contextPath}/TaskServlet" class="sidebar-item menu-view-tasks">
                 <i class="fas fa-eye"></i>
                 <span>View Tasks</span>
             </a>
+
+            <!-- Reminder nav -->
+            <a href="${pageContext.request.contextPath}/ReminderServlet" class="sidebar-item menu-reminder">
+                <i class="fas fa-bell"></i>
+                <span>Reminders</span>
+            </a>
+
 
 
             <form action="${pageContext.request.contextPath}/LogoutServlet" method="post" class="sidebar-item logout-form">

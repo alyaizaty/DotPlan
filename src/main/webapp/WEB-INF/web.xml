@@ -32,6 +32,10 @@
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>Controller.LogoutServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ReminderServlet</servlet-name>
+        <servlet-class>Controller.ReminderServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>SignupServlet</servlet-name>
         <url-pattern>/SignupServlet</url-pattern>
@@ -64,21 +68,20 @@
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/LogoutServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReminderServlet</servlet-name>
+        <url-pattern>/ReminderServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
-    
     <servlet-mapping>
         <servlet-name>TaskServlet</servlet-name>
         <url-pattern>/tasks</url-pattern>
     </servlet-mapping>
-
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
-
-
-
 </web-app>

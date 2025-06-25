@@ -5,7 +5,7 @@
 package java.Controller;
 
 import java.Dao.TaskDAO;
-import java.Model.Task;
+import Model.Task;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -98,7 +98,7 @@ public class TaskActionServlet extends HttpServlet {
 
                 // Load updated task list and forward to viewTask.jsp
                 HttpSession session = req.getSession();
-                java.Model.User user = (java.Model.User) session.getAttribute("user");
+                Model.User user = (Model.User) session.getAttribute("user");
                 java.util.List<Task> taskList = dao.selectTasksByUser(user.getId(), category);
 
                 req.setAttribute("tasks", taskList);
@@ -122,7 +122,7 @@ public class TaskActionServlet extends HttpServlet {
             // Redirect to viewTask.jsp after update
             // Get user from session (important!)
             HttpSession session = req.getSession();
-            java.Model.User user = (java.Model.User) session.getAttribute("user");
+            Model.User user = (Model.User) session.getAttribute("user");
 
             // Load tasks for this user and category
             java.util.List<Task> taskList = dao.selectTasksByUser(user.getId(), category);

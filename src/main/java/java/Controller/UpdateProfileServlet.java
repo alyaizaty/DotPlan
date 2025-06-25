@@ -2,10 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package java.Controller;
+package Controller;
 
-import java.Dao.UserDAO;
-import java.Model.User;
+import Dao.UserDAO;
+import Model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -58,7 +58,8 @@ public class UpdateProfileServlet extends HttpServlet {
         String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
 
         if (fileName != null && !fileName.isEmpty()) {
-            String uploadPath = getServletContext().getRealPath("/") + "profile-pics";
+            String uploadPath = getServletContext().getRealPath("/profile-pics");
+            //String uploadPath = getServletContext().getRealPath("/") + "profile-pics";
             // CAN TRY THIS TOO: String uploadPath = getServletContext().getRealPath("/profile-pics");
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {

@@ -5,8 +5,8 @@
 package java.Controller;
 
 import java.Dao.TaskDAO;
-import java.Model.Task;
-import java.Model.User;
+import Model.Task;
+import Model.User;
 
 import javax.servlet.*;
 import javax.servlet.http.*;

@@ -2,10 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package java.Controller;
+package Controller;
 
-import java.Dao.UserDAO;
-import java.Model.User;
+import Dao.UserDAO;
+import Model.User;
 
 import javax.servlet.ServletException;
 //import javax.servlet.annotation.WebServlet;
@@ -47,7 +47,8 @@ public class SignupServlet extends HttpServlet {
                 //break out of the iframe
                 response.setContentType("text/html");
                 //GANTI BARU response.getWriter().println("<script>window.top.location.href='login.jsp';</script>");
-                response.sendRedirect(request.getContextPath() + "/login.jsp");
+                response.setContentType("text/html");
+                response.getWriter().println("<script>window.top.location.href='" + request.getContextPath() + "/login.jsp';</script>");
 
             } else {
                 System.out.println("Failed to register user: " + username);
